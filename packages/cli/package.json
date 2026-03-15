@@ -1,0 +1,39 @@
+{
+  "name": "opzero",
+  "version": "0.1.0",
+  "description": "Deploy websites from your terminal. Powered by opzero.sh",
+  "type": "module",
+  "bin": {
+    "opzero": "dist/index.js"
+  },
+  "scripts": {
+    "build": "bun build src/index.tsx --outdir dist --target bun --external ink --external react --external @opzero/core",
+    "dev": "bun run src/index.tsx",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": ["dist", "README.md"],
+  "keywords": ["opzero", "deploy", "cli", "cloudflare", "netlify", "vercel", "hosting"],
+  "homepage": "https://opzero.sh",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opzero-sh/cli"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@opzero/core": "workspace:*",
+    "ink": "^5.1.0",
+    "ink-spinner": "^5.0.0",
+    "ink-table": "^3.1.0",
+    "@clack/prompts": "^0.9.0",
+    "chalk": "^5.4.0",
+    "open": "^10.1.0",
+    "react": "^18.3.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/bun": "^1.2.0",
+    "@types/react": "^18.3.0"
+  }
+}

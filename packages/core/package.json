@@ -1,0 +1,36 @@
+{
+  "name": "@opzero/core",
+  "version": "0.1.0",
+  "description": "API client and types for OpZero.sh — deploy websites from anywhere",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": ["dist", "README.md"],
+  "keywords": ["opzero", "deploy", "api-client", "cloudflare", "netlify", "vercel"],
+  "homepage": "https://opzero.sh",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opzero-sh/cli",
+    "directory": "packages/core"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/bun": "^1.2.0"
+  }
+}

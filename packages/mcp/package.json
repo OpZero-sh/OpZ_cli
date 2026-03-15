@@ -1,0 +1,35 @@
+{
+  "name": "@opzero/mcp",
+  "version": "0.1.0",
+  "description": "MCP server for OpZero.sh — let AI assistants deploy websites",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "opzero-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": ["dist", "README.md"],
+  "keywords": ["opzero", "mcp", "model-context-protocol", "ai", "deploy", "claude", "cursor"],
+  "homepage": "https://opzero.sh",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opzero-sh/cli",
+    "directory": "packages/mcp"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@opzero/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/bun": "^1.2.0"
+  }
+}
