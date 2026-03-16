@@ -127,7 +127,7 @@ The MCP server uses the same credentials as the CLI. Run `opzero login` before s
 | `project_archive` | Archive a project |
 | `project_cleanup` | Find stale/duplicate projects |
 
-### Deployments (5 tools)
+### Deployments (6 tools)
 
 | Tool | Description |
 |------|-------------|
@@ -153,7 +153,7 @@ The MCP server uses the same credentials as the CLI. Run `opzero login` before s
 | `ask_agent` | Ask the OpZero agent a question |
 | `get_system_status` | Check platform status |
 
-### Local-only (5 tools)
+### Local-only (4 tools)
 
 These tools only work when the MCP server has access to the local filesystem:
 

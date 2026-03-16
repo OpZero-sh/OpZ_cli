@@ -33,7 +33,7 @@ opzero login --api-key oz_sk_...
 - `--api-key <key>` — Authenticate with an API key directly
 - `--browser` — Force browser-based OAuth flow
 
-Credentials are stored in `~/.config/opzero/credentials.json`.
+Credentials are stored in `~/.opzero/config.json`.
 
 ### `opzero logout`
 
@@ -74,8 +74,6 @@ opzero deploy . --name my-site --target vercel
 - `--artifact <file>` — Deploy a React component file instead of a directory
 - `--markdown <file>` — Deploy a markdown file as a styled page
 - `--themed <file>` — Deploy an HTML file with the OpZero brand theme
-- `--prod` — Deploy to production (default)
-- `--preview` — Create a preview deployment
 
 ### `opzero deploy --artifact <file>`
 
@@ -154,7 +152,6 @@ opzero projects cleanup --dry-run
 
 **Flags:**
 - `--dry-run` — Show what would be cleaned up without making changes
-- `--days <n>` — Consider projects stale after N days of inactivity (default: 30)
 
 ---
 
@@ -195,11 +192,7 @@ View build logs for a deployment.
 
 ```bash
 opzero logs dep_abc123
-opzero logs dep_abc123 --follow
 ```
-
-**Flags:**
-- `--follow, -f` — Stream logs in real time
 
 ---
 

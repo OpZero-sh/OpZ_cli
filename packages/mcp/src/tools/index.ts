@@ -525,16 +525,28 @@ export function registerTools(server: McpServer) {
       name: z.string().describe('Project name to open'),
     },
     async (args) => {
-      const { exec } = await import('child_process')
-      const url = `https://opzero.sh/dashboard`
+      const { execFile } = await import('child_process')
+
+      // Look up the project URL
+      let url = 'https://opzero.sh/dashboard'
+      try {
+        const client = getClient()
+        const result = await client.listProjects({ name_contains: args.name, limit: 1 })
+        const data = JSON.parse(result)
+        const project = data?.projects?.[0]
+        if (project?.url || project?.productionUrl) {
+          url = project.productionUrl || project.url
+        }
+      } catch {}
+
       const cmd =
         process.platform === 'darwin'
           ? 'open'
           : process.platform === 'win32'
             ? 'start'
             : 'xdg-open'
-      exec(`${cmd} ${url}`)
-      return textResult(`Opened dashboard for ${args.name}`)
+      execFile(cmd, [url])
+      return textResult(`Opened ${url}`)
     },
   )
 
@@ -548,9 +560,29 @@ export function registerTools(server: McpServer) {
           'Not authenticated. Run `opzero login` to set up credentials.',
         )
       }
+      const creds = AuthManager.getCredentials()
+      const source = process.env.OPZERO_API_KEY ? 'environment variable (OPZERO_API_KEY)' : 'config file (~/.opzero/config.json)'
+      const authMethod = creds.token ? 'OAuth token' : creds.apiKey ? 'API key' : 'unknown'
+
+      // Get user info from system status
       const client = getClient()
       const result = await client.getSystemStatus()
-      return textResult(result)
+      let userInfo: Record<string, unknown> = {}
+      try {
+        const data = JSON.parse(result)
+        userInfo = {
+          email: data.user?.email,
+          plan: data.user?.plan,
+          status: data.user?.status,
+        }
+      } catch {}
+
+      return textResult(JSON.stringify({
+        authenticated: true,
+        method: authMethod,
+        source,
+        ...userInfo,
+      }, null, 2))
     },
   )
 }
