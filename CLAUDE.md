@@ -78,8 +78,66 @@ bun run build
 | Variable | Purpose |
 |----------|---------|
 | `OPZERO_API_KEY` | API key (overrides config file) |
-| `OPZERO_API_URL` | Custom API base URL |
+| `OPZERO_API_URL` | Custom API base URL (default: `https://opzero.sh`) |
 | `OPZERO_DEFAULT_TARGET` | Default deploy target (cloudflare, netlify, vercel) |
+
+**Environment management**: The CLI authenticates against OpZero.sh, whose env vars are managed on **Vercel**. The CLI itself stores auth config locally at `~/.opzero/config.json`. No Vercel env pull needed for the CLI repo itself — just run `opzero login` with an API key from the dashboard.
+
+### Auth token storage
+
+- **Config file**: `~/.opzero/config.json`
+- **Lookup order**: `OPZERO_API_KEY` env var → config file
+- **Token used as**: `Authorization: Bearer <token>` against OpZero API
+- **MCP server**: Reads same config (headless, no interactive login)
+
+## Testing
+
+```bash
+# Type checking (primary quality gate — no test files exist yet)
+bun run typecheck
+
+# Build all packages (catches compile errors across workspace)
+bun run build
+
+# Lint
+bun run lint
+
+# Manual CLI testing
+bun run packages/cli/src/index.tsx whoami
+bun run packages/cli/src/index.tsx projects
+bun run packages/cli/src/index.tsx deploy --help
+
+# Manual MCP testing (start server, then use MCP inspector)
+bun run packages/mcp/src/index.ts
+# In another terminal: use MCP inspector to call tools
+
+# Test Claude Code plugin
+bun run packages/mcp/src/claude-code-plugin.ts
+```
+
+### Testing each package
+
+| Package | What to test | How |
+|---------|-------------|-----|
+| `@opzero/core` | API client methods, auth manager | `bun run typecheck` in packages/core |
+| `opzero` (CLI) | All 16 commands work | Run each command with `--help` and with real args |
+| `@opzero/mcp` | 26 tools respond correctly | Start server, call tools via MCP inspector |
+| Claude Code plugin | 10 focused tools | Add as MCP server in Claude Code, test deploy flow |
+
+### End-to-end deploy test
+
+```bash
+# Full deploy cycle test
+echo '<h1>Test</h1>' > /tmp/test-deploy.html
+bun run packages/cli/src/index.tsx deploy /tmp/test-deploy.html
+# Verify the returned URL loads the page
+```
+
+## Publishing
+
+Releases are automated via GitHub Actions on `v*` tags:
+- Publishes `@opzero/core`, `opzero`, `@opzero/mcp` to npm with provenance
+- Requires `NPM_TOKEN` GitHub secret
 
 ## Documentation
 
@@ -93,3 +151,9 @@ User-facing docs live in `docs/`. Update them when adding or changing commands o
 | `docs/claude-code-plugin.md` | Claude Code plugin setup and tool reference |
 | `docs/api-client.md` | @opzero/core programmatic usage |
 | `docs/contributing.md` | Contribution guidelines |
+
+## Related repos
+
+- **OpZero.sh** (`~/opzero-sh/OpZero.sh`) — API backend the CLI talks to
+- **backend** (`~/opzero-sh/backend`) — Shared DB schema (`@opzero/db`)
+- **MCPAuthKit** (`~/opzero-sh/MCPAuthKit`) — Auth provider for OAuth flows
