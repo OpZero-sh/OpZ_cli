@@ -235,6 +235,42 @@ opzero templates --json
 
 ---
 
+## Setup
+
+### `opzero setup claude-code`
+
+Configure OpZero as a Claude Code plugin. This command auto-detects the best server configuration and merges it into `~/.claude/settings.json`.
+
+```bash
+opzero setup claude-code
+```
+
+The command performs the following steps:
+
+1. **Detects Claude Code** -- checks if the `claude` CLI is installed
+2. **Checks authentication** -- verifies OpZero credentials are available
+3. **Resolves server command** -- finds the best binary (global `opzero-claude-code`, `opzero-mcp --claude-code`, or `npx @opzero/mcp --claude-code`)
+4. **Updates settings** -- merges the MCP server configuration into `~/.claude/settings.json`, preserving existing settings
+5. **Verifies the plugin** -- confirms the plugin module can be loaded
+
+After setup, open Claude Code and try: "Deploy this project to production"
+
+If you prefer to configure manually, add this to `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "opzero": {
+      "command": "npx",
+      "args": ["@opzero/mcp", "--claude-code"],
+      "env": {}
+    }
+  }
+}
+```
+
+---
+
 ## System
 
 ### `opzero status`

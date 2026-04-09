@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "opzero-mcp": "dist/index.js"
+    "opzero-mcp": "dist/index.js",
+    "opzero-claude-code": "dist/claude-code-plugin.js"
   },
   "scripts": {
     "build": "tsc",

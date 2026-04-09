@@ -13,6 +13,7 @@ import { templates } from './templates.js'
 import { status } from './status.js'
 import { openProject } from './open.js'
 import { mcp } from './mcp.js'
+import { setup } from './setup.js'
 import { showHelp } from './help.js'
 
 type CommandFn = (args: string[], flags: Record<string, string | boolean>) => Promise<void>
@@ -24,7 +25,7 @@ const commands: Record<string, CommandFn> = {
   deployments, rollback, redeploy, logs,
   domains,
   init, templates,
-  status, open: openProject, mcp,
+  status, open: openProject, mcp, setup,
   help: showHelp,
 }
 

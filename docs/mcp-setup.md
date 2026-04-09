@@ -164,6 +164,78 @@ These tools only work when the MCP server has access to the local filesystem:
 | `open_project` | Open a project URL in the browser |
 | `whoami` | Show current user info |
 
+## Claude Code Plugin
+
+The Claude Code plugin is a focused alternative to the full MCP server. It provides 10 high-level tools optimized for the deployment workflow that Claude Code users expect, including framework auto-detection and a unified `opzero_deploy` entry point.
+
+### Automatic Setup
+
+The fastest way to configure the plugin:
+
+```bash
+opzero setup claude-code
+```
+
+This detects your installation method and writes the correct configuration to `~/.claude/settings.json`.
+
+### Manual Setup
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "opzero": {
+      "command": "npx",
+      "args": ["@opzero/mcp", "--claude-code"],
+      "env": {}
+    }
+  }
+}
+```
+
+Or, if the `opzero-claude-code` binary is installed globally:
+
+```json
+{
+  "mcpServers": {
+    "opzero": {
+      "command": "opzero-claude-code",
+      "env": {}
+    }
+  }
+}
+```
+
+### Plugin vs. Full MCP Server
+
+| | Full MCP Server | Claude Code Plugin |
+|---|---|---|
+| Tools | 26 | 10 |
+| Tool style | One tool per API method | Workflow-oriented, high-level |
+| Framework detection | No | Yes (Next.js, Vite, React, etc.) |
+| System prompt | None | Includes deployment instructions for Claude |
+| Best for | Cursor, Windsurf, VS Code, generic MCP clients | Claude Code |
+
+### Plugin Tools
+
+| Tool | Description |
+|------|-------------|
+| `opzero_deploy` | Deploy a project with framework auto-detection |
+| `opzero_preview` | Create a preview deployment |
+| `opzero_status` | Check deployment status and account overview |
+| `opzero_projects` | List and search projects |
+| `opzero_logs` | View build and deployment logs |
+| `opzero_domains` | View or set custom domains |
+| `opzero_rollback` | Rollback to a previous deployment |
+| `opzero_init` | Scaffold a project from a template |
+| `opzero_update` | Incrementally update files in a deployment |
+| `opzero_whoami` | Show authentication status and account info |
+
+For the full plugin design and example interactions, see [claude-code-plugin.md](claude-code-plugin.md).
+
+---
+
 ## Standalone Package
 
 If you only need the MCP server (without the full CLI), install the standalone package:

@@ -10,7 +10,7 @@
 
 Deploy HTML, React components, and full websites to Cloudflare Pages, Netlify, or Vercel — in seconds.
 
-[Get Started](#quick-start) · [Commands](#commands) · [MCP Server](#mcp-server) · [API Client](#api-client)
+[Get Started](#quick-start) · [Commands](#commands) · [Claude Code Plugin](#claude-code-plugin) · [MCP Server](#mcp-server) · [API Client](#api-client)
 
 </div>
 
@@ -88,6 +88,11 @@ That's it. Your site is live.
 | `opzero redeploy <project>` | Redeploy latest version |
 | `opzero logs <id>` | View build logs |
 
+### Setup
+| Command | Description |
+|---------|-------------|
+| `opzero setup claude-code` | Configure OpZero as a Claude Code plugin |
+
 ### Other
 | Command | Description |
 |---------|-------------|
@@ -104,9 +109,89 @@ That's it. Your site is live.
 - `--json` — Output as JSON
 - `--target <provider>` — cloudflare, netlify, or vercel
 
+## Install via Curl
+
+Install the CLI or MCP server without npm:
+
+```bash
+# Install the OpZero CLI
+curl -fsSL https://opzero.sh/install.sh | sh
+
+# Install just the MCP server (for AI tool integration)
+curl -fsSL https://opzero.sh/install-mcp.sh | sh
+```
+
+## Claude Code Plugin
+
+The OpZero Claude Code plugin is a focused deployment experience built specifically for [Claude Code](https://claude.ai/code). Instead of exposing all 26 raw MCP tools, it provides 10 high-level, workflow-oriented tools optimized for the "deploy this project" pattern.
+
+Key features:
+
+- **Framework auto-detection** -- automatically identifies Next.js, Vite, React, static HTML, and markdown projects
+- **Single `opzero_deploy` tool** -- replaces six separate deploy commands with one unified entry point
+- **Rich tool descriptions** -- includes context hints that help Claude make better deployment decisions
+- **Preview deployments** -- stage changes before going live with `opzero_preview`
+
+See the [Claude Code Plugin guide](docs/claude-code-plugin.md) for full details.
+
+### Quick Setup
+
+The fastest way to configure Claude Code is the setup command:
+
+```bash
+opzero setup claude-code
+```
+
+This automatically:
+1. Detects how the OpZero MCP server is installed (global binary, npx, or local)
+2. Merges the correct configuration into `~/.claude/settings.json`
+3. Verifies the plugin module is accessible
+
+### Manual Setup
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "opzero": {
+      "command": "npx",
+      "args": ["@opzero/mcp", "--claude-code"]
+    }
+  }
+}
+```
+
+Or, if installed globally:
+
+```json
+{
+  "mcpServers": {
+    "opzero": {
+      "command": "opzero-claude-code"
+    }
+  }
+}
+```
+
+### Plugin Tools (10)
+
+| Tool | Description |
+|------|-------------|
+| `opzero_deploy` | Deploy a project directory to production with framework auto-detection |
+| `opzero_preview` | Create a preview deployment for reviewing changes |
+| `opzero_status` | Check deployment status and account overview |
+| `opzero_projects` | List and search projects |
+| `opzero_logs` | View build and deployment logs |
+| `opzero_domains` | View or set custom domains |
+| `opzero_rollback` | Rollback to a previous deployment |
+| `opzero_init` | Scaffold a new project from a template |
+| `opzero_update` | Incrementally update files in a deployed project |
+| `opzero_whoami` | Show authentication status and account info |
+
 ## MCP Server
 
-The OpZero MCP server lets AI assistants (Claude Code, Cursor, Windsurf, etc.) deploy websites directly.
+The OpZero MCP server lets AI assistants (Claude Code, Cursor, Windsurf, etc.) deploy websites directly. This is the full 26-tool server suitable for any MCP-compatible client.
 
 ### Setup for Claude Code
 

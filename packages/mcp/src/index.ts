@@ -22,8 +22,18 @@ const isDirectRun =
   process.argv[1]?.endsWith('/mcp/dist/index.js')
 
 if (isDirectRun) {
-  startServer().catch((err) => {
-    console.error('Failed to start MCP server:', err)
-    process.exit(1)
-  })
+  // If --claude-code flag is passed, start the Claude Code plugin server instead
+  if (process.argv.includes('--claude-code')) {
+    import('./claude-code-plugin.js').then(({ startClaudeCodeServer }) =>
+      startClaudeCodeServer(),
+    ).catch((err) => {
+      console.error('Failed to start Claude Code plugin server:', err)
+      process.exit(1)
+    })
+  } else {
+    startServer().catch((err) => {
+      console.error('Failed to start MCP server:', err)
+      process.exit(1)
+    })
+  }
 }

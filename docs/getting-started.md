@@ -15,6 +15,12 @@ Install the CLI globally so the `opzero` command is available everywhere:
 npm install -g opzero
 ```
 
+Or install via curl:
+
+```bash
+curl -fsSL https://opzero.sh/install.sh | sh
+```
+
 Or run commands directly without installing:
 
 ```bash
@@ -105,7 +111,8 @@ Follow the DNS instructions printed by the CLI to complete setup.
 
 ## What's next
 
-- [Full command reference](commands.md) — every command, flag, and option
-- [MCP server setup](mcp-setup.md) — let AI assistants deploy for you
-- [API client guide](api-client.md) — build programmatic integrations
-- [Contributing](contributing.md) — help improve the CLI
+- [Full command reference](commands.md) -- every command, flag, and option
+- [Claude Code plugin](claude-code-plugin.md) -- deploy from Claude Code with 10 focused tools
+- [MCP server setup](mcp-setup.md) -- let AI assistants deploy for you
+- [API client guide](api-client.md) -- build programmatic integrations
+- [Contributing](contributing.md) -- help improve the CLI
