@@ -11,6 +11,9 @@ const DEFAULT_CONFIG: AuthConfig = {
   defaults: { target: 'cloudflare', baseUrl: 'https://opzero.sh' },
 }
 
+/** Default AuthKit OAuth issuer (RFC 8628 device-code provider). */
+const DEFAULT_AUTHKIT_URL = 'https://authkit.open0p.com'
+
 export class AuthManager {
   static configPath(): string {
     return CONFIG_FILE
@@ -49,6 +52,29 @@ export class AuthManager {
     return process.env.OPZERO_API_URL || this.load().defaults.baseUrl
   }
 
+  /**
+   * Base URL of the AuthKit OAuth issuer used for browser/device login.
+   * Resolution order: OPZERO_AUTHKIT_URL env → config.authkit.baseUrl → default.
+   */
+  static getAuthkitUrl(): string {
+    return (
+      process.env.OPZERO_AUTHKIT_URL ||
+      this.load().authkit?.baseUrl ||
+      DEFAULT_AUTHKIT_URL
+    )
+  }
+
+  /** Cached client_id from Dynamic Client Registration, if any. */
+  static getAuthkitClientId(): string | undefined {
+    return process.env.OPZERO_AUTHKIT_CLIENT_ID || this.load().authkit?.clientId
+  }
+
+  static setAuthkitClientId(clientId: string): void {
+    const config = this.load()
+    config.authkit = { ...config.authkit, clientId }
+    this.save(config)
+  }
+
   static getDefaultTarget(): DeployTarget {
     return this.load().defaults.target
   }
@@ -71,6 +97,31 @@ export class AuthManager {
   static setToken(token: string): void {
     const config = this.load()
     config.auth = { method: 'oauth', token }
+    this.save(config)
+  }
+
+  /**
+   * Store a full OAuth token family (access + refresh) from the device-code
+   * grant, preserving the client_id and expiry so the family can be refreshed.
+   */
+  static setOAuthTokens(tokens: {
+    token: string
+    refreshToken?: string
+    expiresIn?: number
+    scope?: string
+    clientId?: string
+  }): void {
+    const config = this.load()
+    config.auth = {
+      method: 'oauth',
+      token: tokens.token,
+      refreshToken: tokens.refreshToken,
+      scope: tokens.scope,
+      clientId: tokens.clientId,
+      expiresAt: tokens.expiresIn
+        ? new Date(Date.now() + tokens.expiresIn * 1000).toISOString()
+        : undefined,
+    }
     this.save(config)
   }
 
